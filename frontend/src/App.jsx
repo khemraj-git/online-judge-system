@@ -68,7 +68,9 @@ function App() {
         <Route path="/admin/leaderboard" element={<Leaderboard />} />
         <Route path="/admin/create-contest" element={<CreateContest />} />
         <Route path="/admin/add-contest-question" element={<AddContestQuestions />} />
-
+        <Route path="/admin/add-contest-question/:contestId" element={<AddContestQuestions />} />
+      
+      
       </Routes>
     </Router>
   );

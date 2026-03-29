@@ -1,4 +1,7 @@
 import { useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+
 
 function AddContestQuestions() {
 
@@ -7,12 +10,27 @@ function AddContestQuestions() {
   const [description, setDescription] = useState("");
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+  const { contestId } = useParams();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
 
-    alert("Question Added (Backend Next)");
-  };
+  e.preventDefault();
+
+  await axios.post(
+    "http://localhost:5000/api/contest-question/add",
+    {
+      contest_id: contestId,
+      title,
+      description,
+      difficulty,
+      input,
+      expected_output: output
+    }
+  );
+
+  alert("Question Added");
+
+};
 
   return (
     <div className="container">

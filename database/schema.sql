@@ -59,3 +59,24 @@ CREATE TABLE submissions (
 -- =========================
 -- Contest table
 -- =========================
+CREATE TABLE contests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255),
+  category VARCHAR(50),
+  start_time DATETIME,
+  end_time DATETIME,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =========================
+-- questions tables
+-- =========================
+CREATE TABLE contest_questions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  contest_id INT,
+  title VARCHAR(255),
+  description TEXT,
+  difficulty VARCHAR(20),
+  input TEXT,
+  expected_output TEXT
+);

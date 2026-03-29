@@ -1,4 +1,7 @@
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 function CreateContest() {
 
@@ -8,12 +11,30 @@ function CreateContest() {
   const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
 
-    alert("Contest Created (Backend next)");
-  };
+  e.preventDefault();
+
+  const start_time = `${startDate} ${startTime}`;
+  const end_time = `${endDate} ${endTime}`;
+
+  await axios.post(
+    "http://localhost:5000/api/contest/create",
+    {
+      name,
+      category,
+      start_time,
+      end_time
+    }
+  );
+
+  alert("Contest Created");
+  navigate(`/admin/add-contest-question/${res.data.insertId}`);
+  
+
+};
 
   return (
     <div className="container">
@@ -21,6 +42,8 @@ function CreateContest() {
       <div className="card">
 
         <h2>Create Contest</h2>
+
+        
 
         <form onSubmit={handleSubmit}>
 
