@@ -8,6 +8,12 @@ function AdminDashboard() {
     <div style={{ padding: "20px" }}>
       <h2>Admin Dashboard</h2>
 
+
+
+      <button onClick={() => navigate("/admin/create-contest")}>
+        Create Contest
+      </button>
+
       <button onClick={() => navigate("/admin/add-question")}>
         Add Question
       </button>

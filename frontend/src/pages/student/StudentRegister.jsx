@@ -36,60 +36,67 @@ function StudentRegister() {
 
   };
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h2>Student Register</h2>
+return (
+  <div className="auth-container">
+
+    <div className="auth-card">
+
+      <div style={{ textAlign: "center" }}>
+
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/3135/3135789.png"
+          width="90"
+        />
+
+        <h2 className="auth-title">
+          Student Register
+        </h2>
+
+      </div>
 
       <form onSubmit={handleRegister}>
 
-        <div>
-          <input
-            type="text"
-            placeholder="Enter Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="Enter Name"
+          className="auth-input"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-        <br />
+        <input
+          type="email"
+          placeholder="Enter Email"
+          className="auth-input"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        <div>
-          <input
-            type="email"
-            placeholder="Enter Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+        <input
+          type="password"
+          placeholder="Enter Password"
+          className="auth-input"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        <br />
-
-        <div>
-          <input
-            type="password"
-            placeholder="Enter Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        <br />
-
-        <button type="submit">Register</button>
+        <button className="auth-button">
+          Register
+        </button>
 
       </form>
 
-      <br />
-
-      <button onClick={() => navigate("/")}>
+      <button
+        className="auth-button link-button"
+        onClick={() => navigate("/")}
+      >
         Back to Login
       </button>
 
     </div>
-  );
+
+  </div>
+);
 }
 
 export default StudentRegister;

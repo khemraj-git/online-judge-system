@@ -1,2 +1,6 @@
-a = int(input())
-print(a)
+# Python Code
+def main():
+    print("Hello World")
+
+if __name__ == "__main__":
+    main()

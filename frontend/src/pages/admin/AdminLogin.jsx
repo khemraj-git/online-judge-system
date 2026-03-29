@@ -35,42 +35,53 @@ function AdminLogin() {
     }
   };
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h2>Admin Login</h2>
+return (
+  <div className="auth-container">
+
+    <div className="auth-card">
+
+      <div style={{textAlign:"center"}}>
+
+        <img 
+          src="https://cdn-icons-png.flaticon.com/512/921/921347.png"
+          width="90"
+        />
+
+        <h2 className="auth-title">
+          Admin Login
+        </h2>
+
+      </div>
 
       <form onSubmit={handleLogin}>
 
-        <div>
-          <input
-            type="text"
-            placeholder="Enter Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="Username"
+          className="auth-input"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
 
-        <br />
+        <input
+          type="password"
+          placeholder="Password"
+          className="auth-input"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        <div>
-          <input
-            type="password"
-            placeholder="Enter Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        <br />
-
-        <button type="submit">Login</button>
+        <button className="auth-button">
+          Login
+        </button>
 
       </form>
 
     </div>
-  );
+
+  </div>
+);
+
 }
 
 export default AdminLogin;
