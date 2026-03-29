@@ -17,13 +17,16 @@ import ContestDetail from "./pages/student/ContestDetail";
 // Admin Pages
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import AddQuestion from "./pages/admin/AddQuestion";
-import EvaluateStudents from "./pages/admin/EvaluateStudents";
-import ManageQuestions from "./pages/admin/ManageQuestions";
+// import AddQuestion from "./pages/admin/AddQuestion";
+// import EvaluateStudents from "./pages/admin/EvaluateStudents";
+// import ManageQuestions from "./pages/admin/ManageQuestions";
 import ViewSubmissions from "./pages/admin/ViewSubmissions";
 import Leaderboard from "./pages/admin/Leaderboard";
 import CreateContest from "./pages/admin/CreateContest";
 import AddContestQuestions from "./pages/admin/AddContestQuestions";
+import ManageContests from "./pages/admin/ManageContests";
+import EditContest from "./pages/admin/EditContest";
+
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -52,8 +55,7 @@ function App() {
         <Route path="/" element={<StudentLogin />} />
         <Route path="/register" element={<StudentRegister />} />
         <Route path="/dashboard" element={<StudentDashboard />} />
-        <Route path="/editor/:id" element={<CodeEditor />} />
-        <Route path="/contests" element={<ContestCategories />} />
+<Route path="/editor/:contestId/:id" element={<CodeEditor />} />        <Route path="/contests" element={<ContestCategories />} />
         <Route path="/contests/:category" element={<ContestList />} />
         <Route path="/contest/:id" element={<ContestDetail />} />
 
@@ -61,15 +63,17 @@ function App() {
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/add-question" element={<AddQuestion />} />
-        <Route path="/admin/evaluate" element={<EvaluateStudents />} />
-        <Route path="/admin/manage" element={<ManageQuestions />} />
+        {/* <Route path="/admin/add-question" element={<AddQuestion />} /> */}
+        {/* <Route path="/admin/evaluate" element={<EvaluateStudents />} /> */}
+        {/* <Route path="/admin/manage" element={<ManageQuestions />} /> */}
         <Route path="/admin/submissions" element={<ViewSubmissions />} />
         <Route path="/admin/leaderboard" element={<Leaderboard />} />
         <Route path="/admin/create-contest" element={<CreateContest />} />
         <Route path="/admin/add-contest-question" element={<AddContestQuestions />} />
         <Route path="/admin/add-contest-question/:contestId" element={<AddContestQuestions />} />
-      
+        <Route path="/admin/manage-contests" element={<ManageContests />} />
+        <Route path="/admin/edit-contest/:id" element={<EditContest />} />
+
       
       </Routes>
     </Router>

@@ -20,21 +20,28 @@ const handleSubmit = async (e) => {
   const start_time = `${startDate} ${startTime}`;
   const end_time = `${endDate} ${endTime}`;
 
-  await axios.post(
-    "http://localhost:5000/api/contest/create",
-    {
-      name,
-      category,
-      start_time,
-      end_time
-    }
-  );
+  try {
 
-  alert("Contest Created");
-  navigate(`/admin/add-contest-question/${res.data.insertId}`);
-  
+    const res = await axios.post(
+      "http://localhost:5000/api/contest/create",
+      {
+        name,
+        category,
+        start_time,
+        end_time
+      }
+    );
+
+    alert("Contest Created");
+
+    navigate("/admin/manage-contests");
+
+  } catch (error) {
+    alert("Error creating contest");
+  }
 
 };
+
 
   return (
     <div className="container">
@@ -102,11 +109,7 @@ const handleSubmit = async (e) => {
             Create Contest
           </button>
 
-          <button
-            onClick={() => window.location.href="/admin/add-contest-question"}
-            >
-            Add Questions
-            </button>
+          
 
         </form>
 

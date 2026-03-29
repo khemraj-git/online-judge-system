@@ -39,7 +39,7 @@ int main() {
 
 function CodeEditor() {
 
-  const { id } = useParams();
+  const { id,contestId } = useParams();
 
   const [question, setQuestion] = useState(null);
   const [language, setLanguage] = useState("python");
@@ -61,7 +61,7 @@ function CodeEditor() {
   const fetchQuestion = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/admin/question/${id}`
+        `http://localhost:5000/api/contest-question/single/${id}`
       );
 
       setQuestion(res.data);
@@ -113,6 +113,7 @@ function CodeEditor() {
       "http://localhost:5000/api/submission/submit",
       {
         student_id: student.student_id,
+        contest_id: question.contest_id,
         question_id: id,
         code,
         language,

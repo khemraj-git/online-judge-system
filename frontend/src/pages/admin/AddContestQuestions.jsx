@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
 
 function AddContestQuestions() {
+
+  
 
   const [title, setTitle] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
@@ -11,24 +13,91 @@ function AddContestQuestions() {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const { contestId } = useParams();
+  const [questions, setQuestions] = useState([]);
+  const [editId, setEditId] = useState(null);
+
+
+  useEffect(() => {
+  fetchQuestions();
+}, []);
+
+const fetchQuestions = async () => {
+
+  const res = await axios.get(
+    `http://localhost:5000/api/contest-question/${contestId}`
+  );
+
+  setQuestions(res.data);
+
+};
 
 const handleSubmit = async (e) => {
 
   e.preventDefault();
 
-  await axios.post(
-    "http://localhost:5000/api/contest-question/add",
-    {
-      contest_id: contestId,
-      title,
-      description,
-      difficulty,
-      input,
-      expected_output: output
-    }
+  if (editId) {
+
+    await axios.put(
+      `http://localhost:5000/api/contest-question/${editId}`,
+      {
+        title,
+        description,
+        difficulty,
+        input,
+        expected_output: output
+      }
+    );
+
+    setEditId(null);
+
+  } else {
+
+    await axios.post(
+      "http://localhost:5000/api/contest-question/add",
+      {
+        contest_id: contestId,
+        title,
+        description,
+        difficulty,
+        input,
+        expected_output: output
+      }
+    );
+
+  }
+
+  alert("Saved");
+
+  fetchQuestions();
+
+  // Clear form
+  setTitle("");
+  setDescription("");
+  setDifficulty("Easy");
+  setInput("");
+  setOutput("");
+
+};
+
+const deleteQuestion = async (id) => {
+
+  await axios.delete(
+    `http://localhost:5000/api/contest-question/${id}`
   );
 
-  alert("Question Added");
+  fetchQuestions();
+
+};
+
+const editQuestion = (q) => {
+
+  setTitle(q.title);
+  setDescription(q.description);
+  setDifficulty(q.difficulty);
+  setInput(q.input);
+  setOutput(q.expected_output);
+
+  setEditId(q.id);
 
 };
 
@@ -37,7 +106,7 @@ const handleSubmit = async (e) => {
 
       <div className="card">
 
-        <h2>Add Contest Question</h2>
+        <h2>Manage Contest Questions</h2>
 
         <form onSubmit={handleSubmit}>
 
@@ -81,10 +150,36 @@ const handleSubmit = async (e) => {
           />
 
           <button>
-            Add Question
+            {editId ? "Update Question" : "Add Question"}
           </button>
 
         </form>
+
+        <h2>Added Questions</h2>
+
+{questions.map((q) => (
+
+  <div key={q.id} className="card">
+
+    <h3>{q.title}</h3>
+
+    <p>Difficulty: {q.difficulty}</p>
+
+    <button
+      onClick={() => editQuestion(q)}
+    >
+      Edit
+    </button>
+
+    <button
+      onClick={() => deleteQuestion(q.id)}
+    >
+      Delete
+    </button>
+
+  </div>
+
+))}
 
       </div>
 

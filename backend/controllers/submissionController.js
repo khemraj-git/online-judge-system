@@ -22,31 +22,34 @@ exports.getSubmissions = (req, res) => {
 
   const db = require("../config/db");
 
+  const contestId = req.params.contestId;
+
   const query = `
+
 SELECT 
-  s.*,
-  st.name AS student_name,
-  q.title AS question_title
+s.*,
+st.name AS student_name,
+q.title AS question_title,
+c.name AS contest_name
+
 FROM submissions s
-JOIN (
-  SELECT 
-    student_id, 
-    question_id, 
-    MAX(submitted_at) AS latest
-  FROM submissions
-  GROUP BY student_id, question_id
-) latest_sub
-ON s.student_id = latest_sub.student_id
-AND s.question_id = latest_sub.question_id
-AND s.submitted_at = latest_sub.latest
+
 JOIN students st 
-  ON s.student_id = st.student_id
-JOIN questions q 
-  ON s.question_id = q.id
+ON s.student_id = st.student_id
+
+JOIN contest_questions q 
+ON s.question_id = q.id
+
+JOIN contests c 
+ON s.contest_id = c.id
+
+WHERE s.contest_id = ?
+
 ORDER BY s.submitted_at DESC
+
 `;
 
-  db.query(query, (err, result) => {
+  db.query(query,[contestId], (err, result) => {
 
     if (err) {
       console.log(err);
@@ -59,33 +62,30 @@ ORDER BY s.submitted_at DESC
 
 };
 
-exports.getLeaderboard = (req, res) => {
+exports.getLeaderboard = (req,res)=>{
 
-  const db = require("../config/db");
+const contestId = req.params.contestId;
 
-  const query = `
-  SELECT 
-    st.student_id,
-    st.name,
-    COUNT(*) AS solved,
-    MAX(s.submitted_at) AS last_submission
-  FROM submissions s
-  JOIN students st 
-    ON s.student_id = st.student_id
-  WHERE s.status = 'Passed'
-  GROUP BY st.student_id
-  ORDER BY solved DESC, last_submission ASC
-  `;
+const query = `
 
-  db.query(query, (err, result) => {
+SELECT 
+st.student_id,
+st.name,
+COUNT(*) AS solved
 
-    if (err) {
-      return res.status(500).json(err);
-    }
+FROM submissions s
 
-    res.json(result);
+JOIN students st 
+ON s.student_id = st.student_id
 
-  });
+WHERE s.status='Passed'
+AND s.contest_id = ?
+
+GROUP BY st.student_id
+
+ORDER BY solved DESC
+
+`;
 
 };
 

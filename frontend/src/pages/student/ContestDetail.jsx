@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 function ContestDetail() {
 
@@ -8,21 +9,57 @@ function ContestDetail() {
 
   const [filter, setFilter] = useState("All");
   const [timeLeft, setTimeLeft] = useState("01:20:30");
+  const [questions, setQuestions] = useState([]);  // ← ADD HERE
 
-  // Timer
+  // Fetch Questions
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(prev => prev); // temporary timer
-    }, 1000);
-
-    return () => clearInterval(interval);
+    fetchQuestions();
   }, []);
 
-  const questions = [
-    { id: 1, title: "Two Sum", difficulty: "Easy" },
-    { id: 2, title: "Binary Search", difficulty: "Medium" },
-    { id: 3, title: "Graph Traversal", difficulty: "Hard" }
-  ];
+  const fetchQuestions = async () => {
+
+    try {
+
+      const res = await axios.get(
+        `http://localhost:5000/api/contest-question/${id}`
+      );
+
+      setQuestions(res.data);
+
+    } catch (error) {
+      console.log(error);
+    }
+
+  };
+
+  // Timer
+ useEffect(() => {
+
+  const interval = setInterval(() => {
+
+    setTimeLeft((prev) => {
+
+      const [h, m, s] = prev.split(":").map(Number);
+
+      let seconds = h * 3600 + m * 60 + s - 1;
+
+      if (seconds <= 0) {
+        clearInterval(interval);
+        return "00:00:00";
+      }
+
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+
+      return `${hours}:${minutes}:${secs}`;
+    });
+
+  }, 1000);
+
+  return () => clearInterval(interval);
+
+}, []);
 
   const filteredQuestions = filter === "All"
     ? questions
@@ -64,7 +101,7 @@ function ContestDetail() {
           <p>Difficulty: {q.difficulty}</p>
 
           <button
-            onClick={() => navigate(`/editor/${q.id}`)}
+            onClick={() => navigate(`/editor/${id}/${q.id}`)}
           >
             Solve Problem
           </button>

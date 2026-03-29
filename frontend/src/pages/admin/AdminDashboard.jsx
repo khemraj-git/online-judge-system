@@ -10,27 +10,21 @@ function AdminDashboard() {
 
 
 
-      <button onClick={() => navigate("/admin/create-contest")}>
+        <button onClick={() => navigate("/admin/create-contest")}>
         Create Contest
-      </button>
+        </button>
 
-      <button onClick={() => navigate("/admin/add-question")}>
-        Add Question
-      </button>
+        <button onClick={() => navigate("/admin/manage-contests")}>
+        Manage Contests
+        </button>
 
-      <br /><br />
-
-      <button onClick={() => navigate("/admin/manage")}>
-        Manage Questions
-      </button>
-
-      <button onClick={() => navigate("/admin/submissions")}>
+        <button onClick={() => navigate("/admin/submissions")}>
         View Submissions
-      </button>
+        </button>
 
-      <button onClick={() => navigate("/admin/leaderboard")}>
+        <button onClick={() => navigate("/admin/leaderboard")}>
         Leaderboard
-      </button>
+        </button>
 
     </div>
   );
