@@ -3,7 +3,11 @@ const generateStudentId = require("../utils/generateStudentId");
 
 exports.registerStudent = (req, res) => {
 
+  console.log("Register API hit");
+
   const { name, email, password } = req.body;
+
+  console.log(name,email,password);
 
   studentModel.getLastStudent((err, result) => {
 
@@ -37,10 +41,6 @@ exports.registerStudent = (req, res) => {
   });
 
 };
-
-
-
-
 
 exports.loginStudent = (req, res) => {
 

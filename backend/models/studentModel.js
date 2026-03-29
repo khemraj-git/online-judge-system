@@ -23,10 +23,6 @@ const getLastStudent = (callback) => {
   db.query(query, callback);
 };
 
-module.exports = {
-  createStudent,
-  getLastStudent
-};
 
 
 const getStudentByEmail = (email, callback) => {

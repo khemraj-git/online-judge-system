@@ -11,6 +11,9 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AddQuestion from "./pages/admin/AddQuestion";
 import EvaluateStudents from "./pages/admin/EvaluateStudents";
+import ManageQuestions from "./pages/admin/ManageQuestions";
+import ViewSubmissions from "./pages/admin/ViewSubmissions";
+import Leaderboard from "./pages/admin/Leaderboard";
 
 function App() {
   return (
@@ -28,6 +31,10 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/add-question" element={<AddQuestion />} />
         <Route path="/admin/evaluate" element={<EvaluateStudents />} />
+        <Route path="/admin/manage" element={<ManageQuestions />} />
+        <Route path="/admin/submissions" element={<ViewSubmissions />} />
+        <Route path="/admin/leaderboard" element={<Leaderboard />} />
+        
 
       </Routes>
     </Router>

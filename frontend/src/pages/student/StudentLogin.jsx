@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function StudentLogin() {
 
@@ -8,13 +9,33 @@ function StudentLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    console.log(email, password);
+    try {
 
-    // temporary navigation
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        {
+          email,
+          password
+        }
+      );
+
+      
+    // Save student data
+    localStorage.setItem("student", JSON.stringify(res.data.student));
+
+    alert("Login Successful");
+
     navigate("/dashboard");
+
+    } catch (error) {
+
+      alert("Login Failed");
+
+    }
+
   };
 
   return (

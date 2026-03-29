@@ -46,13 +46,16 @@ CREATE TABLE questions (
 -- Submissions Table
 -- =========================
 CREATE TABLE submissions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id VARCHAR(10),
-    question_id INT,
-    language VARCHAR(50),
-    code TEXT,
-    output TEXT,
-    submit_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (question_id) REFERENCES questions(id)
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  student_id VARCHAR(20),
+  question_id INT,
+  code TEXT,
+  language VARCHAR(20),
+  output TEXT,
+  status VARCHAR(20),
+  submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- =========================
+-- Contest table
+-- =========================

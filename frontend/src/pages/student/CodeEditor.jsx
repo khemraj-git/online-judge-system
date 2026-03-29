@@ -1,70 +1,246 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Editor from "@monaco-editor/react";
+
+const templates = {
+  python: `# Python Code
+def main():
+    print("Hello World")
+
+if __name__ == "__main__":
+    main()
+`,
+
+  java: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}
+`,
+
+  cpp: `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello World";
+    return 0;
+}
+`,
+
+  c: `#include <stdio.h>
+
+int main() {
+    printf("Hello World");
+    return 0;
+}
+`
+};
 
 function CodeEditor() {
 
   const { id } = useParams();
 
-  const [code, setCode] = useState("");
+  const [question, setQuestion] = useState(null);
   const [language, setLanguage] = useState("python");
+  const [code, setCode] = useState(templates.python);
+  const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+  const [status, setStatus] = useState("");
+  const [contestEnded, setContestEnded] = useState(false);
 
-  const handleRun = () => {
-    // temporary run logic
-    setOutput("Running code...");
+
+  useEffect(() => {
+    fetchQuestion();
+  }, []);
+
+  useEffect(() => {
+  fetchContestTime();
+  }, []);
+
+  const fetchQuestion = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/admin/question/${id}`
+      );
+
+      setQuestion(res.data);
+
+      // Auto fill input
+      setInput(res.data.input || "");
+
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleSubmit = () => {
-    alert("Submitted Successfully");
+  const handleRun = async () => {
+
+    try {
+
+      setOutput("Running...");
+      setStatus("");
+
+      const res = await axios.post(
+        "http://localhost:5000/api/run/run",
+        {
+          code,
+          language,
+          input,
+          expectedOutput: question.expected_output
+        }
+      );
+
+      setOutput(res.data.output);
+      setStatus(res.data.status);
+
+    } catch (error) {
+
+      setOutput("Error running code");
+
+    }
+
   };
+
+  // handle submit function
+  const handleSubmit = async () => {
+
+  try {
+
+    const student = JSON.parse(localStorage.getItem("student"));
+
+    await axios.post(
+      "http://localhost:5000/api/submission/submit",
+      {
+        student_id: student.student_id,
+        question_id: id,
+        code,
+        language,
+        output,
+        status
+      }
+    );
+
+    alert("Submission Saved");
+
+  } catch (error) {
+    console.log(error);
+    alert("Submission Failed");
+  }
+
+};
+
+
+const fetchContestTime = async () => {
+
+  const res = await axios.get(
+    "http://localhost:5000/api/submission/contest"
+  );
+
+  const endTime = new Date(res.data.end_time);
+
+  setInterval(() => {
+
+    const now = new Date();
+
+    if (now > endTime) {
+      setContestEnded(true);
+    }
+
+  }, 1000);
+
+};
 
   return (
     <div style={{ padding: "20px" }}>
       <h2>Code Editor</h2>
 
-      <h3>Question ID: {id}</h3>
+      {question && (
+        <div>
+          <h3>{question.title}</h3>
+          <p>{question.description}</p>
 
-      <div>
-        <label>Select Language:</label>
-        <select 
-          value={language} 
-          onChange={(e) => setLanguage(e.target.value)}
-        >
-          <option value="python">Python</option>
-          <option value="java">Java</option>
-          <option value="c">C</option>
-          <option value="cpp">C++</option>
-        </select>
-      </div>
+          <p>
+            <b>Input:</b> {question.input}
+          </p>
 
-      <br />
+          <p>
+            <b>Expected Output:</b> {question.expected_output}
+          </p>
 
-      <textarea
-        rows="15"
-        cols="80"
-        placeholder="Write your code here..."
+          <p>
+            <b>Deadline:</b> {question.deadline}
+          </p>
+        </div>
+      )}
+
+      <h3>Select Language</h3>
+
+      <select
+        value={language}
+        onChange={(e) => {
+          setLanguage(e.target.value);
+          setCode(templates[e.target.value]);
+        }}
+      >
+        <option value="python">Python</option>
+        <option value="java">Java</option>
+        <option value="cpp">C++</option>
+        <option value="c">C</option>
+      </select>
+
+      <br /><br />
+
+      <Editor
+        height="400px"
+        language={language}
         value={code}
-        onChange={(e) => setCode(e.target.value)}
+        onChange={(value) => setCode(value)}
       />
 
-      <br />
-      <br />
+      <br /><br />
 
-      <button onClick={handleRun}>Run</button>
+      <h3>Input</h3>
 
-      <button 
-        onClick={handleSubmit}
-        style={{ marginLeft: "10px" }}
-      >
-        Submit
+      <textarea
+        rows="5"
+        cols="80"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
+
+      <br /><br />
+
+      <button onClick={handleRun}>
+        Run
       </button>
 
-      <br />
-      <br />
+      <button 
+          onClick={handleSubmit}
+          disabled={contestEnded}
+        >
+          {contestEnded ? "Contest Ended" : "Submit"}
+        </button>
 
       <h3>Output</h3>
 
-      <pre>{output}</pre>
+      <div
+        style={{
+          backgroundColor: "#000",
+          color: "#0f0",
+          padding: "10px",
+          minHeight: "100px"
+        }}
+      >
+        {output}
+      </div>
+
+      <h3>Result</h3>
+
+      <div>
+        {status === "Passed" && "✅ Passed"}
+        {status === "Wrong Answer" && "❌ Wrong Answer"}
+      </div>
 
     </div>
   );
