@@ -9,7 +9,7 @@ router.get("/all", submissionController.getSubmissions);
 
 router.get("/:contestId", submissionController.getSubmissions);
 
-router.get("/leaderboard/:contestId",controller.getLeaderboard)
+router.get("/leaderboard/:contestId", submissionController.getLeaderboard)
 
 router.get("/contest", submissionController.getContestTime);
 module.exports = router;

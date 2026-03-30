@@ -80,6 +80,8 @@ return (
 
       </form>
 
+      <br />
+
       <button 
         className="auth-button link-button"
         onClick={() => navigate("/register")}
